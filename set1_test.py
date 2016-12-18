@@ -37,5 +37,8 @@ class TestSet1(unittest.TestCase):
         actual = set1.encrypt_repeating_key_xor(plaintext, "ICE")
         self.assertEqual(expect, actual.hex())
 
+    def test_hamming_distance(self):
+        self.assertEqual(set1.hamming_distance(b"this is a test", b"wokka wokka!!!"), 37)
+
 if __name__ == '__main__':
     unittest.main()
