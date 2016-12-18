@@ -40,5 +40,14 @@ class TestSet1(unittest.TestCase):
     def test_hamming_distance(self):
         self.assertEqual(set1.hamming_distance(b"this is a test", b"wokka wokka!!!"), 37)
 
+    def test_find_repeating_xor_key(self):
+        ciphertext = b"/7)-;Kr-.#G37$t\x1e=0~"
+        self.assertEqual(set1.find_repeating_xor_key(ciphertext, 5), b"gREAT")
+
+    def test_break_repeating_key_xor(self):
+        # English detection unreliable
+        pass
+
+
 if __name__ == '__main__':
     unittest.main()
