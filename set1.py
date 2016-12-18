@@ -107,7 +107,7 @@ def find_repeating_xor_key(data, keysize):
 
 def break_repeating_key_xor(data, want_key=False, key_sizes_to_try=6):
     keysize_candidates = []
-    for keysize in range(2, 50):
+    for keysize in range(2, min(40, len(data) // 4)):
         dist1 = hamming_distance(data[0:keysize], data[keysize:keysize*2])
         dist2 = hamming_distance(data[keysize*2:keysize*3], data[keysize*3:keysize*4])
         normalized_dist = ((dist1 + dist2) / 2.0) / float(keysize)
