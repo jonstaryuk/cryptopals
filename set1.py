@@ -147,3 +147,30 @@ def decrypt_aes_ecb(ciphertext, key):
     cipher = Cipher(algorithms.AES(key), modes.ECB(), backend=default_backend())
     decryptor = cipher.decryptor()
     return decryptor.update(ciphertext) + decryptor.finalize()
+
+def read_multi_hex_file(filename):
+    blobs = []
+    with open(filename, "r") as f:
+        for line in f:
+            if line[-1] == "\n":
+                line = line[:-1]
+            blobs.append(bytes.fromhex(line))
+    return blobs
+
+def detect_aes_ecb(ciphertext, block_size=16):
+    """Gives the proportion of ciphertext blocks that are duplicates"""
+    blocks = [ciphertext[i:i+block_size] for i in range(0, len(ciphertext), block_size)]
+    known = []
+    dups = 0
+    for block in blocks:
+        if block not in known:
+            known.append(block)
+        else:
+            dups += 1
+    return dups / len(blocks)
+
+def detect_aes_ecb_file(filename):
+    ciphertexts = read_multi_hex_file(filename)
+    candidates = [(ct, detect_aes_ecb(ct)) for ct in ciphertexts]
+    candidates.sort(key=lambda tup: tup[1], reverse=True)
+    return candidates[0][0]
