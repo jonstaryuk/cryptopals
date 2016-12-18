@@ -107,7 +107,7 @@ def find_repeating_xor_key(data, keysize):
         key.append(break_single_byte_xor(transposed_block, want_key=True))
     return bytes(key)
 
-def break_repeating_key_xor(data, want_key=False, key_sizes_to_try=6):
+def break_repeating_key_xor(data, want_key=False, key_sizes_to_try=6, top_n=None):
     keysize_candidates = []
     for keysize in range(2, min(40, len(data) // 4)):
         dist1 = hamming_distance(data[0:keysize], data[keysize:keysize*2])
@@ -126,6 +126,12 @@ def break_repeating_key_xor(data, want_key=False, key_sizes_to_try=6):
         plaintexts.append((key, plaintext, english_score(plaintext)))
 
     plaintexts.sort(key=lambda tup: tup[2])
+
+    if top_n is not None:
+        if want_key:
+            return [tup[0] for tup in plaintexts[:top_n]]
+        else:
+            return [tup[1] for tup in plaintexts[:top_n]]
 
     if want_key:
         return plaintexts[0][0]

@@ -45,8 +45,9 @@ class TestSet1(unittest.TestCase):
         self.assertEqual(set1.find_repeating_xor_key(ciphertext, 5), b"gREAT")
 
     def test_break_repeating_key_xor(self):
-        # English detection unreliable
-        pass
+        msg = b"Sed eget commodo magna, sed varius risus."
+        ciph = set1.encrypt_repeating_key_xor(msg, b"srfb")
+        self.assertTrue(msg in set1.break_repeating_key_xor(ciph, top_n=5))
 
 
 if __name__ == '__main__':
