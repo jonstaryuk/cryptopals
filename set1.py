@@ -130,9 +130,11 @@ def break_repeating_key_xor(data, want_key=False, key_sizes_to_try=6):
     else:
         return plaintexts[0][1]
 
-
 def break_repeating_key_xor_file(filename):
+    return break_repeating_key_xor(read_base64_encoded_file(filename))
+
+def read_base64_encoded_file(filename):
     with open(filename, "r") as f:
         data = f.read()
     data = data.replace("\n", "")
-    return break_repeating_key_xor(base64.b64decode(data))
+    return base64.b64decode(data)
