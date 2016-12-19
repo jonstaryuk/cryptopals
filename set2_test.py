@@ -1,5 +1,6 @@
 import set1
 import set2
+import functools
 import unittest
 
 
@@ -32,6 +33,12 @@ class TestSet2(unittest.TestCase):
             expected_msg = f.read()
 
         self.assertEqual(set2.decrypt_aes_cbc(ciph, key, iv), expected_msg)
+
+    def test_detect_ecb_cbc(self):
+        expected = []
+        encryptor = functools.partial(set2.encrypt_randomly, test_list=expected)
+        detected = [set2.detect_ecb_cbc(encryptor) for i in range(20)]
+        self.assertEqual(expected, detected)
 
 
 if __name__ == '__main__':

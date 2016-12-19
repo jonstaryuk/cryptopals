@@ -67,3 +67,34 @@ def decrypt_aes_cbc(ciph, key, iv, block_size=16):
 
     return pkcs7_unpad(b"".join(msg))
 
+
+def encrypt_randomly(data, test_list=None):
+    key = os.urandom(16)
+
+    pad1amt = random.randint(5, 10)
+    pad2amt = random.randint(5, 10)
+    data = os.urandom(pad1amt) + data + os.urandom(pad2amt)
+
+    mode = "ECB" if os.urandom(1)[0] % 2 == 0 else "CBC"
+
+    if test_list is not None:
+        test_list.append(mode)
+
+    if mode == "ECB":
+        data = pkcs7_pad(data)
+        assert len(data) % 16 == 0
+        return encrypt_aes_ecb(data, key)
+    else:
+        iv = os.urandom(16)
+        return encrypt_aes_cbc(data, key, iv)
+
+
+def detect_ecb_cbc(encrypt):
+    data = b"yellowsubmarine yellowsubmarine yellowsubmarine yellowsubmarine"
+    ciph = encrypt(data)
+    blocks = [ciph[i:i+16] for i in range(0, len(ciph), 16)]
+
+    if blocks[2] == blocks[3]:
+        return "ECB"
+    else:
+        return "CBC"
