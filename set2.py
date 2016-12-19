@@ -1,22 +1,21 @@
+import os
+import random
 import set1
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 
 
 def pkcs7_pad(data, block_size=16):
-    data = bytearray(data)
-
     if len(data) < block_size:
         pad = block_size - len(data)
     else:
-        pad = len(data) % block_size
+        pad = block_size - len(data) % block_size
         if pad == 0:
             pad = block_size
 
-    for i in range(pad):
-        data.append(pad)
+    data = data + (chr(pad).encode() * pad)
 
-    return bytes(data)
+    return data
 
 
 def pkcs7_unpad(data):
