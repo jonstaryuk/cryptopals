@@ -27,12 +27,12 @@ def pkcs7_unpad(data):
     return bytes(data[:-pad])
 
 
-def encrypt_aes_ecb(block, key):
+def encrypt_aes_ecb(data, key):
     if type(key) == str:
         key = key.encode()
     cipher = Cipher(algorithms.AES(key), modes.ECB(), backend=default_backend())
     encryptor = cipher.encryptor()
-    return encryptor.update(block) + encryptor.finalize()
+    return encryptor.update(data) + encryptor.finalize()
 
 
 def xor(a, b):
